@@ -3,8 +3,8 @@ import os
 import configparser
 from argparse import ArgumentParser
 
-from training.train import train
-from training.evaluate import test
+from src.train.train import train
+from src.train.evaluate import test
 
 
 def main(config_file, labels_dict):
@@ -36,13 +36,15 @@ def parse_args(config):
     parser = ArgumentParser()
 
     # Directory args
-    parser.add_argument("--proj_dir", default=config['DIR']['PROJ_DIR'])
-    parser.add_argument("--train_dir", default=config['DIR']['TRAIN_DIR'])
-    parser.add_argument("--test_dir", default=config['DIR']['TEST_DIR'])
+    parser.add_argument("--proj_dir", type=str, default=config['DIR']['PROJ_DIR'])
+    parser.add_argument("--train_dir", type=str, default=config['DIR']['TRAIN_DIR'])
+    parser.add_argument("--test_dir", type=str, default=config['DIR']['TEST_DIR'])
 
     # Data args
-    parser.add_argument("--train_data_dir", default=config['DIR']['TRAIN_DATA_DIR'])
-    parser.add_argument("--test_data_dir", default=config['DIR']['TEST_DATA_DIR'])
+    parser.add_argument("--train_data_dir", type=str, default=config['DIR']['TRAIN_DATA_DIR'])
+    parser.add_argument("--test_data_dir", type=str, default=config['DIR']['TEST_DATA_DIR'])
+    parser.add_argument("--train_data_mode", type=str, help="if to use generated/synthetic images or original to train. Either orig or gen",
+    default=config['DIR']['TRAIN_DATA_MODE'])
 
     # Training args
     parser.add_argument("--epochs", type=int, default=config['VAR']['EPOCHS'])
@@ -56,7 +58,8 @@ def parse_args(config):
     return args
 
 if __name__ == '__main__':
-    labels_dict = {'NC': 0, 'PD': 1}
-    config_file = ''
+
+    labels_dict = {'NC': 0, 'PD': 1} # Dictionary of classes you want to classify
+    config_file = 'config.ini' # Add your .ini config file
 
     main(config_file, labels_dict)

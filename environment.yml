@@ -1,0 +1,20 @@
+name: DAT-DL-classification
+channels:
+  - defaults
+dependencies:
+  - scikit-image
+  - numpy
+  - scikit-learn
+  - pandas
+  - matplotlib
+  - pytorch
+  - cudatoolkit=10.2
+  - torchvision
+  - tqdm
+  - torchinfo
+  - tensorboard
+  - nibabel
+  - monai
+  - python=3.10
+  - simpleitk::simpleitk
+prefix: /home/leonor/anaconda3/envs/DAT-DL-classification
