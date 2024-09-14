@@ -20,7 +20,6 @@ class ResNet(nn.Module):
             OrderedDict(
                 [
                     ("conv0", nn.Conv3d(1, 64, kernel_size=5, stride=2, padding=2, bias=True)),
-                    #("norm0", nn.BatchNorm3d(num_init_features)),
                     ("norm0", nn.InstanceNorm3d(64)),
                     ("relu0", nn.LeakyReLU(inplace=True)),
                     ("pool0", nn.MaxPool3d(kernel_size=3, stride=2, padding=1)),
@@ -62,12 +61,10 @@ class ResNet(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         out = self.features(x)
-        #out = F.relu(features, inplace=True)
         out = F.adaptive_avg_pool3d(out, (1, 1, 1))
 
         out = th.flatten(out, 1)
         out = self.classifier(out)
-        #out = th.softmax(out, dim=1)
         out = th.log_softmax(out, dim=1)
         return out
 
@@ -114,30 +111,3 @@ class InterConv(nn.Module):
         out = self.features(input)
         return out
 
-
-# model = ResNet()
-#
-# ti.summary(model, input_size=(1, 1, 91, 109, 91))
-
-
-# true = np.array([[0, 1, 0], [0, 0, 1]])
-# pred = np.array([[0.05, 0.95, 0], [0.1, 0.8, 0.1]])
-# weights = class_weight.compute_class_weight(class_weight='balanced', classes=list(config.LABELS.values()),
-#                                                 y=true)
-#
-# print()
-#
-# weights = th.Tensor(weights)
-# true = th.Tensor(true)
-# pred = th.Tensor(pred)
-#
-# pred = th.clamp(pred, 0.0000001, 1 - 0.0000001)
-# loss = -1 * (true * th.log(pred))
-# print(loss)
-#
-# loss_final = th.sum(loss) * (1. / pred.shape[0])
-# print(loss_final)
-#
-# pred_nll = th.log_softmax(pred, dim=1)
-# loss_nll = nn.NLLLoss()(pred_nll, true)
-# print(loss_nll)
